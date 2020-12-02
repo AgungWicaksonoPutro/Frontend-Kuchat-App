@@ -30,16 +30,24 @@
             <CardMap/>
         </div>
         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-8 content">
+          <div class="row no-gutters" v-if="idReceiver == 0">
+            <ChatListNull/>
+          </div>
+          <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 available" v-else>
             <div class="row no-gutters">
-                <MenuChat
-                :data="getProfileContact"/>
+              <MenuChat
+              :data="getProfileContact"/>
             </div>
             <div class="row no-gutters">
-                <ChatList/>
+              <ChatList
+              :data="getMsg"
+              :id="userId"
+              :idReceiv="idReceiver"/>
             </div>
             <div class="row no-gutters">
-                <MessageControl/>
+              <MessageControl @send-message="sendMessage"/>
             </div>
+          </div>
         </div>
     </div>
 </template>
@@ -51,12 +59,14 @@ import ChatList from '../../../components/_base/ChatList'
 import CardMap from '../../../components/_base/CardMap'
 import MenuChat from '../../../components/_base/MenuChat'
 import MessageControl from '../../../components/_base/MessageControl'
+import ChatListNull from '../../../components/_base/ChatListNull'
 import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Profile',
   data () {
     return {
-      bio: ''
+      bio: '',
+      idReceiver: 0
     }
   },
   components: {
@@ -65,7 +75,8 @@ export default {
     ChatList,
     CardMap,
     MenuChat,
-    MessageControl
+    MessageControl,
+    ChatListNull
   },
   methods: {
     ...mapActions(['getUserById', 'editUser']),
@@ -87,7 +98,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getProfile', 'userId', 'getProfileContact'])
+    ...mapGetters(['getProfile', 'userId', 'getProfileContact', 'getMsg'])
   }
 }
 </script>
@@ -96,6 +107,12 @@ export default {
 .content{
   height: 100vh;
   box-shadow: inset 4px 0px 6px -6px rgba(219,219,219,0.86);
+  position: relative;
+  background-color: #FAFAFA;
+}
+.available{
+    padding-right: 0;
+    padding-left: 0;
 }
 .account{
     margin: 7px;

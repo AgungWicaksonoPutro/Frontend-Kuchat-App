@@ -7,6 +7,7 @@ import Register from '../views/Auth/Register/Register.vue'
 import ForgotPassword from '../views/Auth/ForgotPwd/ForgotPassword.vue'
 import Chat from '../views/Main/Chat/Chat.vue'
 import Profiles from '../views/Main/Profiles/Profile.vue'
+import ResetPassword from '../views/Auth/Reset/Reset.vue'
 import store from '../store/index'
 
 Vue.use(VueRouter)
@@ -31,6 +32,11 @@ const routes = [
         path: 'forgot-password',
         name: 'Forgot-Password',
         component: ForgotPassword
+      },
+      {
+        path: 'reset-password',
+        name: 'Reset-Password',
+        component: ResetPassword
       }
     ]
   },

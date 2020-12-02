@@ -1,19 +1,38 @@
 import axios from 'axios'
 const state = {
+  allContact: [],
   contact: [],
-  friendList: [],
-  location: []
+  location: [],
+  idProfile: 0,
+  profileContact: []
 }
 
 const mutations = {
-  setfriendList (state, payload) {
-    state.friendList = payload
-  },
   setContact (state, payload) {
     state.contact = payload
   },
   setLocation (state, payload) {
     state.location = payload
+  },
+  setAllContact (state, payload) {
+    const tabContact = payload.filter(a => {
+      return Number(a.idUser) === Number(state.idProfile) || Number(a.idFriend) === Number(state.idProfile)
+    }).map(a => {
+      const setFriend = {}
+      setFriend.id = a.id
+      setFriend.idUser = a.idFriend
+      setFriend.idFriend = a.idUser
+      if (Number(state.idProfile) === Number(a.idFriend)) {
+        return setFriend
+      } else {
+        return a
+      }
+    })
+    console.log(tabContact)
+    state.allContact = tabContact
+  },
+  setIdContact (state, payload) {
+    state.idProfile = payload
   }
 }
 
@@ -22,8 +41,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       axios.get(process.env.VUE_APP_API_URL + '/contacts/' + payload)
         .then((res) => {
-          context.commit('setfriendList', res.data.result)
-          resolve(res.data.result)
+          context.commit('setContact', res.data.result[0])
+          resolve(res.data.result[0])
         })
         .catch((err) => {
           reject(err)
@@ -41,6 +60,18 @@ const actions = {
           reject(err)
         })
     })
+  },
+  getAllContact (context, payload) {
+    return new Promise((resolve, reject) => {
+      axios.get(process.env.VUE_APP_API_URL + '/contacts/')
+        .then((res) => {
+          context.commit('setAllContact', res.data.result)
+          resolve(res.data.result)
+        })
+        .catch((err) => {
+          reject(err)
+        })
+    })
   }
 }
 
@@ -50,6 +81,9 @@ const getters = {
   },
   getProfileContact (state) {
     return state.contact
+  },
+  getAllContactList (state) {
+    return state.allContact
   }
 }
 
